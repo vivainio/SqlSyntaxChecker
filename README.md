@@ -13,3 +13,17 @@ ERR .\testdata\errors.sql
  3 Incorrect syntax near oeutoeuoeu.
  5 Incorrect syntax near oethulroeethulrtoetu.
  ```
+
+Usage:
+
+```
+CheckTsql.exe <filename>... <dirname...>
+```
+
+It checks every file listed in command line, and searches every directory listed
+for files matching *.sql.
+
+### License
+
+MIT
+
