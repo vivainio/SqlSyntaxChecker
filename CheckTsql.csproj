@@ -10,5 +10,4 @@
       <HintPath>lib\Microsoft.SqlServer.TransactSql.ScriptDom.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 </Project>

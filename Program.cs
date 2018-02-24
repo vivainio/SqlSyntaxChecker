@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.SqlServer.TransactSql.ScriptDom;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace CheckTsql
 {
@@ -28,24 +29,39 @@ namespace CheckTsql
                 }
             ).ToArray();
             return errors;
-
         }
         static void Main(string[] args)
         {
+            var allFiles = new List<string>();
+
             foreach (var arg in args) {
-                var errors = ParseFile(arg);
+                if (File.Exists(arg)) {
+                    allFiles.Add(arg);
+                    continue;
+                }
+                if (Directory.Exists(arg)) {
+                    allFiles.AddRange(new DirectoryInfo(arg).GetFiles("*.sql", SearchOption.AllDirectories).Select(it => it.FullName));
+                    continue;
+                }
+                Console.WriteLine($"Not file or directory: {arg}");
+            }
+            foreach (var file in allFiles) {
+                if (!File.Exists(file)) {
+                    Console.WriteLine($"ERR NOTEXIST: {file}");
+                    continue;
+                }
+                var errors = ParseFile(file);
                 if (!errors.Any()) {
-                    Console.WriteLine($"OK ${arg}");
+                    Console.WriteLine($"OK {file}");
 
                 } else {
-                    Console.WriteLine($"ERR {arg}");
+                    Console.WriteLine($"ERR {file}");
 
                     foreach (var err in errors) {
-                        Console.WriteLine($" {err.Line} {err.Message}");
+                        Console.WriteLine($"    {err.Line} {err.Message}");
                     }
                 }
             }
-            ParseFile(args[0]);
         }
     }
 }
