@@ -57,7 +57,7 @@ namespace CheckTsql
             var p = new CsvParser(new StreamReader(fname));
             var good = new List<string>();
 
-            var badFileName = $"{fname}.bad.csv";
+            var badFileName = $"{fname}.sqlerr.csv";
             var writer = new StreamWriter(File.Create(badFileName), Encoding.UTF8);
 
             int linenum = 0;
@@ -81,6 +81,10 @@ namespace CheckTsql
                     writer.Write(": ");
 
                     writer.WriteLine(l);
+                    foreach (var err in errors) {
+                        writer.WriteLine(err.Display());
+
+                    }
                 }
             }
             writer.Flush();
